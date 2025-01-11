@@ -18,8 +18,10 @@ router.get('/phone',
         timestamp: new Date().toISOString(),
         data: phoneNumber,
         metadata: {
-          rate_limit_remaining: res.getHeader('X-RateLimit-Remaining'),
-          rate_limit_reset: new Date(res.getHeader('X-RateLimit-Reset') * 1000).toISOString()
+          rate_limit_remaining: res.getHeader('X-RateLimit-Remaining') || 100,
+          rate_limit_reset: res.getHeader('X-RateLimit-Reset') ? 
+            new Date(parseInt(res.getHeader('X-RateLimit-Reset')) * 1000).toISOString() :
+            new Date(Date.now() + 15 * 60 * 1000).toISOString()
         }
       });
     } catch (error) {
@@ -44,8 +46,10 @@ router.get('/phone/bulk',
         data: phoneNumbers,
         metadata: {
           count: phoneNumbers.length,
-          rate_limit_remaining: res.getHeader('X-RateLimit-Remaining'),
-          rate_limit_reset: new Date(res.getHeader('X-RateLimit-Reset') * 1000).toISOString()
+          rate_limit_remaining: res.getHeader('X-RateLimit-Remaining') || 100,
+          rate_limit_reset: res.getHeader('X-RateLimit-Reset') ? 
+            new Date(parseInt(res.getHeader('X-RateLimit-Reset')) * 1000).toISOString() :
+            new Date(Date.now() + 15 * 60 * 1000).toISOString()
         }
       });
     } catch (error) {
